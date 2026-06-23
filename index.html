@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OpenAN - Open Autonomous Networks for Telecom</title>
+<meta name="description" content="OpenAN is an LF Networking candidate project building an open, vendor-neutral framework for end-to-end closed-loop autonomous networks: A2A-T SDK, Registry Center, and Orchestration Center.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="./src/images/openan-logo.png">
+<style>
+  :root {
+    --void: #06080f;
+    --bg: #0c1020;
+    --surface: #121830;
+    --surface-2: #1a2142;
+    --border: rgba(255,255,255,0.07);
+    --border-strong: rgba(255,255,255,0.14);
+    --text: #eef3fb;
+    --text-muted: #8c97b3;
+    --text-dim: #5a648a;
+    --signal: #1aa8e2;        /* OpenAN light blue */
+    --signal-2: #4fc3f7;      /* sky blue */
+    --signal-bright: #29b6f6;
+    --deep: #1a2b8c;          /* OpenAN dark navy */
+    --accent: #00bcd4;        /* cyan accent */
+    --grid-line: rgba(26,168,226,0.04);
+
+    --display: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --sans: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--void);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Layered background: subtle grid + cool radial glow */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 64px 64px;
+    pointer-events: none;
+    z-index: 0;
+    mask-image: radial-gradient(ellipse at top, black 30%, transparent 75%);
+  }
+  body::after {
+    content: "";
+    position: fixed; top: -20%; left: 50%;
+    width: 1200px; height: 800px;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse at center, rgba(26,168,226,0.10), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  img, svg { display: block; max-width: 100%; }
+
+  .container {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  section { padding: 100px 0; position: relative; z-index: 1; }
+
+  .mono { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.04em; }
+  .kicker {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--signal);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .kicker::before {
+    content: "";
+    width: 24px; height: 1px;
+    background: var(--signal);
+  }
+
+  .section-head {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: end;
+    margin-bottom: 64px;
+  }
+  .section-head h2 {
+    font-family: var(--display);
+    font-weight: 300;
+    font-size: clamp(2rem, 4.2vw, 3.4rem);
+    line-height: 1.06;
+    letter-spacing: -0.025em;
+    margin-top: 18px;
+  }
+  .section-head h2 em {
+    font-style: normal;
+    font-weight: 500;
+    background: linear-gradient(120deg, var(--signal), var(--signal-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .section-head p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+  .section-tag { color: var(--signal); }
+
+  /* ---------- TOP UTILITY BAR ---------- */
+  .topbar {
+    border-bottom: 1px solid var(--border);
+    background: rgba(6,8,15,0.6);
+    backdrop-filter: blur(8px);
+    position: relative;
+    z-index: 50;
+  }
+  .topbar-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+  }
+  .topbar a { color: var(--text-muted); }
+  .topbar a:hover { color: var(--signal); }
+  .topbar-right { display: flex; gap: 24px; }
+
+  /* ---------- HEADER ---------- */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(6,8,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 0;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo-mark {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.96);
+    padding: 4px;
+  }
+  .logo-mark img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+  }
+  .logo-text {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 1.15rem;
+    letter-spacing: -0.01em;
+  }
+  .logo-text span {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    color: var(--text-dim);
+    display: block;
+    margin-top: -2px;
+    text-transform: uppercase;
+  }
+
+  .nav {
+    display: flex;
+    gap: 36px;
+    font-size: 0.92rem;
+    font-weight: 400;
+  }
+  .nav a {
+    color: var(--text-muted);
+    transition: color 0.2s;
+    position: relative;
+    padding: 6px 0;
+  }
+  .nav a:hover { color: var(--text); }
+  .nav a::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 100%; bottom: 0;
+    height: 1px;
+    background: var(--signal);
+    transition: right 0.3s ease;
+  }
+  .nav a:hover::after { right: 0; }
+
+  .header-actions { display: flex; align-items: center; gap: 20px; }
+  .icon-btn {
+    width: 38px; height: 38px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    transition: all 0.2s;
+  }
+  .icon-btn:hover { border-color: var(--signal); color: var(--signal); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 20px;
+    border-radius: 999px;
+    font-weight: 500;
+    font-size: 0.92rem;
+    transition: all 0.25s;
+  }
+  .btn-primary {
+    background: var(--signal);
+    color: var(--void);
+  }
+  .btn-primary:hover {
+    background: var(--text);
+    box-shadow: 0 0 0 4px rgba(26,168,226,0.18);
+  }
+  .btn-ghost {
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+  }
+  .btn-ghost:hover { border-color: var(--signal); color: var(--signal); }
+
+  .hamburger {
+    display: none;
+    width: 38px; height: 38px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    place-items: center;
+    cursor: pointer;
+    background: none;
+    color: var(--text);
+  }
+  .hamburger:hover { border-color: var(--signal); color: var(--signal); }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    padding: 140px 0 120px;
+    position: relative;
+    text-align: center;
+  }
+  .hero-grid { max-width: 960px; margin: 0 auto; }
+  .hero-eyebrow { margin-bottom: 36px; }
+  .hero-eyebrow .kicker { justify-content: center; }
+  .hero-eyebrow .kicker::before,
+  .hero-eyebrow .kicker::after {
+    content: "";
+    width: 24px; height: 1px;
+    background: var(--signal);
+  }
+  .hero h1 {
+    font-family: var(--display);
+    font-weight: 300;
+    font-size: clamp(2.6rem, 6vw, 5rem);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+    margin-bottom: 28px;
+  }
+  .hero h1 em {
+    font-style: normal;
+    font-weight: 500;
+    background: linear-gradient(120deg, var(--signal), var(--signal-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero-sub {
+    font-size: 1.18rem;
+    color: var(--text-muted);
+    max-width: 680px;
+    margin: 0 auto 48px;
+    line-height: 1.6;
+  }
+  .hero-ctas {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 56px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .hero-trust {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+  .hero-trust .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--signal);
+    box-shadow: 0 0 12px var(--signal);
+  }
+
+  /* ---------- STATS ---------- */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .stat {
+    padding: 0 24px;
+    border-left: 1px solid var(--border);
+  }
+  .stat:first-child { border-left: none; padding-left: 0; }
+  .stat-num {
+    font-family: var(--display);
+    font-weight: 300;
+    font-size: clamp(2.2rem, 3.4vw, 3rem);
+    line-height: 1;
+    margin-bottom: 8px;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .stat-num span { color: var(--signal); margin-left: 2px; }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* ---------- CAPABILITIES ---------- */
+  .cap-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--border);
+  }
+  .pillar {
+    padding: 56px 36px 56px 0;
+    border-right: 1px solid var(--border);
+  }
+  .pillar:last-child { border-right: none; padding-right: 0; }
+  .pillar-num {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--signal);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 28px;
+  }
+  .pillar h3 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    margin-bottom: 16px;
+  }
+  .pillar p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.65;
+    margin-bottom: 20px;
+  }
+  .pillar-link {
+    color: var(--signal);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    transition: opacity 0.2s;
+  }
+  .pillar-link:hover { opacity: 0.8; }
+
+  /* ---------- ARCHITECTURE CARD ---------- */
+  .architecture-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .arch-content { padding: 56px; }
+  .arch-content h3 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 1.7rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin: 18px 0 18px;
+  }
+  .arch-content p {
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin-bottom: 32px;
+  }
+  .arch-meta {
+    display: flex;
+    gap: 36px;
+    margin-bottom: 32px;
+    padding: 20px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .arch-meta div { display: flex; flex-direction: column; gap: 4px; }
+  .arch-meta strong {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 1.6rem;
+    color: var(--signal);
+  }
+  .arch-meta span {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .arch-visual {
+    background: linear-gradient(135deg, rgba(26,168,226,0.06), rgba(0,188,212,0.04));
+    border-left: 1px solid var(--border);
+    display: grid;
+    place-items: center;
+    padding: 48px;
+    min-height: 480px;
+  }
+
+  /* ---------- COMPONENT CARDS ---------- */
+  .components-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .component-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px;
+    transition: all 0.25s;
+  }
+  .component-card:hover {
+    border-color: var(--signal);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px -16px rgba(26,168,226,0.4);
+  }
+  .component-num {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--signal);
+    letter-spacing: 0.14em;
+    margin-bottom: 14px;
+    display: block;
+  }
+  .component-card h4 {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .component-card .desc {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    line-height: 1.65;
+    margin-bottom: 18px;
+  }
+  .component-card .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .component-card .tags span {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    background: var(--surface-2);
+    padding: 4px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ---------- EXTENSIONS / PROJECT CARDS ---------- */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .project-card {
+    background: var(--surface);
+    padding: 32px;
+    transition: background 0.25s;
+  }
+  .project-card:hover { background: var(--surface-2); }
+  .project-card h4 {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .project-card h4 .tag {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--signal);
+    background: rgba(26,168,226,0.1);
+    border: 1px solid rgba(26,168,226,0.25);
+    padding: 3px 8px;
+    border-radius: 999px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+  .project-card .desc {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .proj-link {
+    color: var(--signal);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* ---------- USE CASE ---------- */
+  .usecase-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+  .usecase-card h3 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 1.5rem;
+    margin: 18px 0;
+    letter-spacing: -0.02em;
+  }
+  .usecase-card p {
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin-bottom: 14px;
+  }
+  .usecase-flow {
+    background: linear-gradient(135deg, rgba(26,168,226,0.05), rgba(0,188,212,0.03));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+  }
+  .usecase-flow ol {
+    list-style: none;
+    counter-reset: flow;
+  }
+  .usecase-flow li {
+    counter-increment: flow;
+    padding: 12px 0 12px 44px;
+    border-top: 1px solid var(--border);
+    position: relative;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+  .usecase-flow li:first-child { border-top: none; }
+  .usecase-flow li::before {
+    content: counter(flow, decimal-leading-zero);
+    position: absolute;
+    left: 0; top: 12px;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--signal);
+    letter-spacing: 0.05em;
+  }
+  .usecase-flow li strong { color: var(--text); font-weight: 500; }
+
+  /* ---------- ROADMAP ---------- */
+  .roadmap-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 56px;
+  }
+  .roadmap-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    position: relative;
+  }
+  .roadmap-grid::before {
+    content: "";
+    position: absolute;
+    top: 32px; left: 5%; right: 5%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--signal), var(--signal-2), var(--signal));
+    opacity: 0.5;
+  }
+  .milestone { position: relative; padding-top: 56px; text-align: left; }
+  .milestone::before {
+    content: "";
+    position: absolute;
+    top: 24px; left: 0;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--signal);
+    box-shadow: 0 0 0 4px var(--surface), 0 0 16px var(--signal);
+  }
+  .milestone .when {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--signal);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .milestone h4 {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 1.05rem;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+  .milestone p {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+
+  /* ---------- GET STARTED ---------- */
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .step-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+  }
+  .step-num {
+    font-family: var(--display);
+    font-weight: 300;
+    font-size: 2.4rem;
+    color: var(--signal);
+    margin-bottom: 18px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .step-card h4 {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 1.05rem;
+    margin-bottom: 10px;
+  }
+  .step-card p {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .step-card code {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--signal-2);
+    background: var(--void);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    overflow-wrap: anywhere;
+    line-height: 1.5;
+  }
+
+  /* ---------- COMMUNITY ---------- */
+  .community-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .comm-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+    transition: all 0.25s;
+    display: block;
+  }
+  .comm-card:hover {
+    border-color: var(--signal);
+    transform: translateY(-2px);
+  }
+  .comm-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: rgba(26,168,226,0.1);
+    border: 1px solid rgba(26,168,226,0.25);
+    color: var(--signal);
+    display: grid;
+    place-items: center;
+    margin-bottom: 20px;
+  }
+  .comm-card h4 {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 1.05rem;
+    margin-bottom: 10px;
+  }
+  .comm-card p {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .comm-link {
+    color: var(--signal);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* ---------- GOVERNANCE ---------- */
+  .tsc-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 56px;
+  }
+  .tsc-info p {
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin-bottom: 18px;
+  }
+  .tsc-links {
+    display: flex;
+    gap: 14px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+  .tsc-members-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px;
+  }
+  .tsc-members-card h4 {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 24px;
+  }
+  .tsc-member {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-top: 1px solid var(--border);
+  }
+  .tsc-member:first-of-type { border-top: none; }
+  .tsc-member-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(26,168,226,0.08);
+    border: 1px solid rgba(26,168,226,0.2);
+    display: grid;
+    place-items: center;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--signal);
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .tsc-member-name { font-weight: 500; font-size: 0.92rem; }
+  .tsc-member-org {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+  .tsc-note {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    line-height: 1.5;
+  }
+
+  /* ---------- JOIN CTA ---------- */
+  .join-cta {
+    padding: 140px 0;
+    text-align: center;
+    position: relative;
+  }
+  .join-cta::before {
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(26,168,226,0.08), transparent 60%);
+    pointer-events: none;
+  }
+  .join-cta .container { max-width: 880px; }
+  .join-cta h2 {
+    font-family: var(--display);
+    font-weight: 300;
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    line-height: 1.06;
+    letter-spacing: -0.025em;
+    margin-bottom: 24px;
+  }
+  .join-cta h2 em {
+    font-style: normal;
+    font-weight: 500;
+    background: linear-gradient(120deg, var(--signal), var(--signal-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .join-cta p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    margin-bottom: 40px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+  .newsletter-form {
+    display: flex;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    padding: 6px;
+    max-width: 480px;
+    margin: 0 auto 24px;
+    transition: border-color 0.3s;
+  }
+  .newsletter-form:focus-within {
+    border-color: var(--signal);
+    box-shadow: 0 0 0 4px rgba(26,168,226,0.12);
+  }
+  .newsletter-form input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    padding: 12px 20px;
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    outline: none;
+  }
+  .newsletter-form input::placeholder { color: var(--text-dim); }
+  .newsletter-form button {
+    padding: 12px 24px;
+    background: var(--signal);
+    color: var(--void);
+    border-radius: 999px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+  }
+  .newsletter-form button:hover { background: var(--text); }
+  .join-cta .small {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+
+  /* ---------- FOOTER ---------- */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 72px 0 36px;
+    background: var(--void);
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr;
+    gap: 56px;
+    margin-bottom: 64px;
+  }
+  .footer-brand p {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin-top: 20px;
+    max-width: 320px;
+  }
+  .footer-col h5 {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 20px;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col li { margin-bottom: 12px; }
+  .footer-col a {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    transition: color 0.2s;
+  }
+  .footer-col a:hover { color: var(--signal); }
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+  .footer-social { display: flex; gap: 16px; }
+  .footer-social a {
+    width: 32px; height: 32px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: var(--text-muted);
+    transition: all 0.2s;
+  }
+  .footer-social a:hover {
+    border-color: var(--signal);
+    color: var(--signal);
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 1024px) {
+    .nav { display: none; }
+    .hamburger { display: grid; }
+    .hero { padding: 100px 0 100px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+    .cap-grid { grid-template-columns: 1fr; }
+    .pillar { border-right: none; border-bottom: 1px solid var(--border); padding: 36px 0 !important; }
+    .pillar:last-child { border-bottom: none; }
+    .pillar-num { margin-bottom: 24px; }
+    .architecture-card { grid-template-columns: 1fr; }
+    .arch-content { padding: 40px; }
+    .arch-visual { border-left: none; border-top: 1px solid var(--border); min-height: 360px; padding: 32px; }
+    .components-grid { grid-template-columns: 1fr; }
+    .projects-grid { grid-template-columns: repeat(2, 1fr); }
+    .usecase-card { grid-template-columns: 1fr; gap: 32px; padding: 36px; }
+    .roadmap-card { padding: 36px; }
+    .roadmap-grid { grid-template-columns: 1fr 1fr; gap: 32px 24px; }
+    .roadmap-grid::before { display: none; }
+    .steps-grid { grid-template-columns: repeat(2, 1fr); }
+    .community-grid { grid-template-columns: repeat(2, 1fr); }
+    .tsc-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+    .section-head { grid-template-columns: 1fr; gap: 24px; align-items: start; margin-bottom: 48px; }
+  }
+  @media (max-width: 640px) {
+    .container { padding: 0 20px; }
+    section { padding: 72px 0; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .stat { border-left: none; padding-left: 0; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .community-grid { grid-template-columns: 1fr; }
+    .steps-grid { grid-template-columns: 1fr; }
+    .roadmap-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .topbar-right { display: none; }
+    .header-actions .btn-ghost { display: none; }
+    .newsletter-form { flex-direction: column; border-radius: 16px; padding: 8px; }
+    .newsletter-form button { border-radius: 12px; }
+    .arch-meta { flex-direction: column; gap: 16px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP UTILITY BAR -->
+<div class="topbar">
+  <div class="container topbar-inner">
+    <a href="https://lfnetworking.org">Part of LF Networking, a Linux Foundation project (candidate)</a>
+    <div class="topbar-right">
+      <a href="https://github.com/project-openan">GitHub</a>
+      <a href="https://linuxfoundation.zulipchat.com">Zulip</a>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container header-inner">
+    <a class="logo" href="#">
+      <div class="logo-mark">
+        <img src="./src/images/openan-logo.png" alt="OpenAN logo">
+      </div>
+      <div class="logo-text">
+        Open<b style="color: var(--signal); font-weight: 500;">AN</b>
+        <span>Open Autonomous Networks</span>
+      </div>
+    </a>
+
+    <nav class="nav">
+      <a href="#about">About</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#components">Components</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#community">Community</a>
+      <a href="#governance">Governance</a>
+    </nav>
+
+    <div class="header-actions">
+      <a href="https://github.com/project-openan" class="icon-btn" aria-label="GitHub">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.5 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.57 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.55-1.13-4.55-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.7 0 0 .84-.27 2.75 1.05A9.5 9.5 0 0 1 12 7.36c.85.01 1.71.12 2.51.34 1.91-1.32 2.75-1.05 2.75-1.05.55 1.4.2 2.44.1 2.7.64.71 1.03 1.62 1.03 2.74 0 3.93-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.81 0 .27.18.59.69.49C19.14 20.61 22 16.78 22 12.25 22 6.59 17.52 2 12 2z"/></svg>
+      </a>
+      <a href="#community" class="btn btn-ghost">Join the community</a>
+      <a href="#get-involved" class="btn btn-primary">
+        Get involved
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+      <button class="hamburger" aria-label="Menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <div class="hero-eyebrow">
+        <span class="kicker">LF Networking Candidate . Launched 2026</span>
+      </div>
+      <h1>Closed-loop autonomous networks, <em>open by design.</em></h1>
+      <p class="hero-sub">
+        OpenAN is an open, vendor-neutral framework for end-to-end autonomous networks. It accelerates cross-layer, cross-domain integration of telecom-specific agents and enables multi-agent collaboration so global operators can deploy AN with efficient orchestration and interaction.
+      </p>
+      <div class="hero-ctas">
+        <a href="https://github.com/project-openan" class="btn btn-primary">
+          View on GitHub
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#about" class="btn btn-ghost">Read the mission</a>
+      </div>
+      <div class="hero-trust">
+        <span class="dot"></span>
+        Kickoff contributors: China Mobile . Huawei . More partners joining
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats" style="padding: 32px 0 56px;">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Seed Components</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">L5</div>
+        <div class="stat-label">Target Autonomy Level</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">4</div>
+        <div class="stat-label">A2A-T Extensions</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">Apache<span> 2.0</span></div>
+        <div class="stat-label">Open Source License</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION / CAPABILITIES -->
+<section id="about">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="kicker section-tag">/ Mission</span>
+        <h2>An open foundation for <em>autonomous telecom networks.</em></h2>
+      </div>
+      <p>OpenAN brings the operators, vendors, and innovators of the telecom industry together around shared standards, shared skills, and a shared roadmap toward Autonomous Networks Level 5.</p>
+    </div>
+
+    <div class="cap-grid">
+      <div class="pillar">
+        <span class="pillar-num">01 / E2E Closed Loop</span>
+        <h3>Multi-agent collaboration across every layer.</h3>
+        <p>Accelerate cross-layer and cross-domain integration and deployment of telecom-specific agents. OpenAN enables multi-agent collaboration so global operators benefit from efficient orchestration and interaction across the AN stack.</p>
+        <a href="#architecture" class="pillar-link">See the architecture &#8594;</a>
+      </div>
+      <div class="pillar">
+        <span class="pillar-num">02 / Vendor Neutral</span>
+        <h3>Built on industry-shared standards.</h3>
+        <p>Grounded in industry standards (SPG, A2A-T, intent API), OpenAN promotes vendor-neutral, scenario-based skills, components, knowledge, and practices. A collaboration ecosystem across the whole telecom industry collectively enhances AN capability.</p>
+        <a href="#community" class="pillar-link">Join the community &#8594;</a>
+      </div>
+      <div class="pillar">
+        <span class="pillar-num">03 / Future Evolution</span>
+        <h3>Toward Autonomous Networks Level 5.</h3>
+        <p>OpenAN aims to be the de facto standard for autonomous network operation in telecom, and to explore integration and collaboration for the next generation of intelligent systems aimed at AN L5.</p>
+        <a href="#roadmap" class="pillar-link">View the roadmap &#8594;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section id="architecture" style="padding-top: 40px;">
+  <div class="container">
+    <div class="architecture-card">
+      <div class="arch-content">
+        <span class="kicker">Project Scope</span>
+        <h3>A multi-agent collaboration framework for OSS, EMS, and the network layer.</h3>
+        <p>OpenAN sits between the service layer (OSS copilots, optimization and fault agents) and the network layer (RAN, fixed access, IP, core). The A2A-T SDK extends Google's A2A protocol with telecom-grade primitives so agents in either layer can register, discover, negotiate, and act safely on the network.</p>
+
+        <div class="arch-meta">
+          <div>
+            <strong>3</strong>
+            <span>Open source components</span>
+          </div>
+          <div>
+            <strong>4</strong>
+            <span>A2A-T extensions</span>
+          </div>
+          <div>
+            <strong>2</strong>
+            <span>Transport protocols</span>
+          </div>
+        </div>
+
+        <a href="#components" class="btn btn-primary">
+          Explore the components
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <div class="arch-visual">
+        <svg viewBox="0 0 520 500" style="width:100%;height:100%;">
+          <defs>
+            <linearGradient id="layerG" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#1aa8e2" stop-opacity="0.18"/>
+              <stop offset="100%" stop-color="#4fc3f7" stop-opacity="0.10"/>
+            </linearGradient>
+            <linearGradient id="coreG" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#1aa8e2" stop-opacity="0.28"/>
+              <stop offset="100%" stop-color="#00bcd4" stop-opacity="0.18"/>
+            </linearGradient>
+          </defs>
+
+          <g font-family="Geist Mono, monospace" font-size="10" fill="#8c97b3" letter-spacing="0.1em">
+            <!-- Service Layer -->
+            <rect x="60" y="50" width="390" height="60" fill="url(#layerG)" stroke="#1aa8e2" stroke-opacity="0.45" rx="6"/>
+            <text x="80" y="74" fill="#eef3fb" font-size="12">SERVICE LAYER</text>
+            <text x="80" y="92">OSS copilots . optimization . fault agents</text>
+
+            <!-- Orchestration Center -->
+            <rect x="60" y="130" width="188" height="56" fill="url(#coreG)" stroke="#1aa8e2" stroke-opacity="0.55" rx="6"/>
+            <text x="80" y="150" fill="#eef3fb" font-size="12">ORCHESTRATION</text>
+            <text x="80" y="166" font-size="9">workflows . canvas</text>
+            <text x="80" y="178" font-size="9">refinement</text>
+
+            <!-- Registry Center -->
+            <rect x="260" y="130" width="190" height="56" fill="url(#coreG)" stroke="#1aa8e2" stroke-opacity="0.55" rx="6"/>
+            <text x="278" y="150" fill="#eef3fb" font-size="12">REGISTRY</text>
+            <text x="278" y="166" font-size="9">agent cards . skills</text>
+            <text x="278" y="178" font-size="9">retrieval</text>
+
+            <!-- A2A-T SDK -->
+            <rect x="60" y="206" width="390" height="56" fill="url(#coreG)" stroke="#00bcd4" stroke-opacity="0.6" rx="6"/>
+            <text x="80" y="228" fill="#eef3fb" font-size="12">A2A-T SDK</text>
+            <text x="80" y="246" font-size="9">task-t . notification-t . negotiation-t . authorization-t</text>
+
+            <!-- Telecom skills -->
+            <rect x="60" y="282" width="390" height="56" fill="url(#layerG)" stroke="#1aa8e2" stroke-opacity="0.4" rx="6"/>
+            <text x="80" y="304" fill="#eef3fb" font-size="11">TELECOM SKILLS &amp; COMPONENT LIBRARY</text>
+            <text x="80" y="322" font-size="9">rag . memory . runtime engine</text>
+
+            <!-- Network Layer -->
+            <rect x="60" y="358" width="390" height="62" fill="url(#layerG)" stroke="#1aa8e2" stroke-opacity="0.4" rx="6"/>
+            <text x="80" y="382" fill="#eef3fb" font-size="12">NETWORK LAYER</text>
+            <text x="80" y="400">ran . fixed access . ip . core</text>
+            <text x="80" y="414" font-size="9">intelligent network infrastructure</text>
+          </g>
+
+          <!-- Connecting arrows -->
+          <g stroke="#1aa8e2" stroke-opacity="0.4" stroke-width="1" fill="none" stroke-dasharray="4 4">
+            <path d="M255 110 L255 130"/>
+            <path d="M154 186 L154 206"/>
+            <path d="M355 186 L355 206"/>
+            <path d="M255 262 L255 282"/>
+            <path d="M255 338 L255 358"/>
+          </g>
+
+          <text x="472" y="240" font-family="Geist Mono, monospace" font-size="9" fill="#5a648a" letter-spacing="0.15em" text-anchor="end" transform="rotate(-90 472 240)">OPENAN SCOPE</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPONENTS -->
+<section id="components">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="kicker section-tag">/ Seed Components</span>
+        <h2>Three components,<br/><em>open sourced together.</em></h2>
+      </div>
+      <p>In June 2026 at DTW-Copenhagen, OpenAN open sources its three seed components. From September to December, scenario-based solution packages are released through joint innovation with operators.</p>
+    </div>
+
+    <div class="components-grid">
+      <div class="component-card">
+        <span class="component-num">01 / SDK</span>
+        <h4>A2A-T SDK</h4>
+        <p class="desc">A telecom-grade extension of the A2A protocol, designed for deterministic, network-scenario-compliant cross-layer agent collaboration. Supports JSON-RPC and HTTP+REST.</p>
+        <div class="tags">
+          <span>JSON-RPC</span>
+          <span>HTTP+REST</span>
+          <span>Apache 2.0</span>
+          <span>A2A-T-SDK-Python</span>
+          <span>A2A-T-SDK-Java</span>
+        </div>
+      </div>
+      <div class="component-card">
+        <span class="component-num">02 / Discovery</span>
+        <h4>Registry Center</h4>
+        <p class="desc">The "agent labor market" — a yellow-pages service that finds and manages agent addresses, registers skills, handles health management, and uses LLM-aided retrieval to map intents to the right agent.</p>
+        <div class="tags">
+          <span>Agent Cards</span>
+          <span>Skill Registry</span>
+          <span>RAG Retrieval</span>
+        </div>
+      </div>
+      <div class="component-card">
+        <span class="component-num">03 / Workflow</span>
+        <h4>Orchestration Center</h4>
+        <p class="desc">A hub that orchestrates agents into reliable, reusable workflows via a workflow canvas, condition editor, property manager, and a workflow market — bridging manual design and autonomous programming.</p>
+        <div class="tags">
+          <span>Workflow Canvas</span>
+          <span>Autonomous Programming</span>
+          <span>Knowledge &amp; RAG</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- A2A-T EXTENSIONS -->
+<section style="padding-top: 40px;">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="kicker section-tag">/ A2A-T Extensions</span>
+        <h2>Telecom-grade primitives on top<br/>of <em>the A2A protocol.</em></h2>
+      </div>
+      <p>A2A is the foundation for inter-agent communication. For telecom, A2A-T adds four extensions so agents can describe tasks precisely, share network events efficiently, negotiate around ambiguity, and act on the network only with explicit authorization.</p>
+    </div>
+
+    <div class="projects-grid">
+      <div class="project-card">
+        <h4>Task-T <span class="tag">Schema</span></h4>
+        <div class="desc">A structured task schema that defines a deterministic prompt for each task, eliminating the ambiguity of free-form requests between agents.</div>
+      </div>
+      <div class="project-card">
+        <h4>Notification-T <span class="tag">Eventing</span></h4>
+        <div class="desc">Network event subscription and publication. Optimized for the data/event reporting patterns that telecom O&amp;M relies on at scale.</div>
+      </div>
+      <div class="project-card">
+        <h4>Negotiation-T <span class="tag">Control</span></h4>
+        <div class="desc">Controllable, structured negotiation between agents to resolve ambiguity and confirm feasibility before action is taken.</div>
+      </div>
+      <div class="project-card">
+        <h4>Authorization-T <span class="tag">Security</span></h4>
+        <div class="desc">Dynamic security: agent card and skill limitations plus explicit authorization before any agent makes network-changing operations.</div>
+      </div>
+      <div class="project-card">
+        <h4>Agent Cards <span class="tag">Base</span></h4>
+        <div class="desc">A2A base fields — name, description, URL, provider, version, capabilities, authentication, default input modes, and skills — fully reused by A2A-T.</div>
+      </div>
+      <div class="project-card">
+        <h4>Transport <span class="tag">Protocol</span></h4>
+        <div class="desc">JSON-RPC for fixed-format, one-way messages; HTTP+REST for stateful, long-lived connections over URL-addressable resources.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASE -->
+<section style="padding-top: 40px;">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="kicker section-tag">/ Multi-Agent Use Case</span>
+        <h2>Home broadband<br/><em>complaint handling.</em></h2>
+      </div>
+      <p>When a customer calls in with "no internet for two days" or "YouTube is slow", OpenAN orchestrates the right agents end-to-end — billing, CDN, RAN, and vendor-specific fault agents — and hands off to a human expert only when needed.</p>
+    </div>
+
+    <div class="usecase-card">
+      <div>
+        <span class="kicker">Workflow</span>
+        <h3>From call center to NOC, with humans in the loop.</h3>
+        <p>The Home Broadband Complaint Handling Agent recalls a workflow from the Orchestration Center, retrieves the matching agents from the Registry Center, and coordinates them over A2A-T.</p>
+        <p>Different complaints trigger different workflows: a billing issue invokes the customer-care and billing agents; a CDN issue invokes customer-care, the CDN agent, and a vendor FAN agent.</p>
+      </div>
+
+      <div class="usecase-flow">
+        <ol>
+          <li><strong>Intent capture</strong> — Call center receives the customer complaint and forwards intent to the Complaint Handling Agent.</li>
+          <li><strong>Workflow recall</strong> — The Orchestration Center selects the workflow that matches the complaint type.</li>
+          <li><strong>Agent retrieval</strong> — The Registry Center returns matching agent cards (customer care, billing, CDN, vendor FAN, etc.).</li>
+          <li><strong>Multi-agent execution</strong> — Agents collaborate over A2A-T to diagnose and resolve the issue.</li>
+          <li><strong>Expert handoff</strong> — When the workflow cannot resolve the case, the NOC expert is brought in with full context.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="kicker section-tag">/ Roadmap</span>
+        <h2>From kickoff to <em>commercial verification.</em></h2>
+      </div>
+      <p>OpenAN launched at MWC-Barcelona in March 2026 and open sourced its seed code, donating to LF Networking in June 2026 at DTW-Copenhagen. Commercial verification is planned through 2027.</p>
+    </div>
+
+    <div class="roadmap-card">
+      <div class="roadmap-grid">
+        <div class="milestone">
+          <span class="when">2026.03 . MWC Barcelona</span>
+          <h4>Kickoff (Launch)</h4>
+          <p>China Mobile and Huawei announce OpenAN; development and verification begin in earnest.</p>
+        </div>
+        <div class="milestone">
+          <span class="when">2026.06 . DTW Copenhagen</span>
+          <h4>Seed Code &amp; LFN Donation</h4>
+          <p>A2A-T SDK, Registry Center, and Orchestration Center are open sourced and donated to LF Networking.</p>
+        </div>
+        <div class="milestone">
+          <span class="when">2026.12 . TM Forum IHPP</span>
+          <h4>Launch Innovations</h4>
+          <p>Scenario solution packages and more contributors join; OpenAN is positioned as an Innovation Hub Pioneer Project.</p>
+        </div>
+        <div class="milestone">
+          <span class="when">2027</span>
+          <h4>Commercial Verification</h4>
+          <p>Startup member review, ongoing maintenance, and commercial verification of OpenAN deployments by operators.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMUNITY -->
+<section id="community">
+
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="kicker section-tag">/ Community</span>
+        <h2>Built in the open,<br/><em>by operators and vendors.</em></h2>
+      </div>
+      <p>OpenAN is being built by China Mobile and Huawei at kickoff, with more partners joining through 2026. Whether you operate a network, build network equipment, or research autonomous systems — there is a seat for you.</p>
+    </div>
+
+    <div class="community-grid">
+      <a href="https://github.com/project-openan" class="comm-card">
+        <div class="comm-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        </div>
+        <h4>GitHub</h4>
+        <p>All OpenAN repositories live in the project-openan GitHub organization. The seed code import is in progress; watch the org for new repos as they land.</p>
+        <span class="comm-link">View the org &#8594;</span>
+      </a>
+
+      <a href="https://linuxfoundation.zulipchat.com" class="comm-card">
+        <div class="comm-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h4>Zulip</h4>
+        <p>Real-time discussion on the LF Zulip. Subscribe to <code style="font-family: var(--mono); color: var(--signal); font-size: 0.82rem;">#lfn-openan-discussion</code>, <code style="font-family: var(--mono); color: var(--signal); font-size: 0.82rem;">#lfn-openan-support</code>, and <code style="font-family: var(--mono); color: var(--signal); font-size: 0.82rem;">#lfn-openan-tsc</code>.</p>
+        <span class="comm-link">Join the conversation &#8594;</span>
+      </a>
+
+      <a href="https://lf-networking.atlassian.net/wiki/spaces/OpenAN/overview" class="comm-card">
+        <div class="comm-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+        </div>
+        <h4>Wiki &amp; Meetings</h4>
+        <p>Project documentation, meeting notes, and working-group structure are coming as the project organizes. Community calls will be open to everyone.</p>
+        <span class="comm-link">Contribute here &#8594;</span>
+      </a>
+
+      <a href="#governance" class="comm-card">
+        <div class="comm-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <h4>TSC Governance</h4>
+        <p>The TSC oversees design and development, sets release and quality standards, mediates technical conflicts, and organizes inter-project collaboration. An Advisory Committee provides industry input.</p>
+        <span class="comm-link">View governance &#8594;</span>
+      </a>
+
+      <a href="https://github.com/project-openan/docs" class="comm-card">
+        <div class="comm-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+        </div>
+        <h4>Documentation</h4>
+        <p>The documentation repo is live. Getting-started guides, A2A-T reference docs, and scenario playbooks are published in the project-openan GitHub organization.</p>
+        <span class="comm-link">Read the docs &#8594;</span>
+      </a>
+
+      <a href="https://lists.openan.dev" class="comm-card">
+        <div class="comm-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h4>Mailing Lists</h4>
+        <p>OpenAN mailing lists for the TSC, developers, and announcements are hosted on Groups.io. Subscribe to stay in the loop.</p>
+        <span class="comm-link">Browse the lists &#8594;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- GET STARTED -->
+<section id="get-involved">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="kicker section-tag">/ Get Involved</span>
+        <h2>From zero to first<br/><em>contribution.</em></h2>
+      </div>
+      <p>OpenAN is a candidate LFN project. The seed code is now available in the project-openan GitHub organization. The fastest way to get started is to read the charter, clone the repos, and join the community on Zulip.</p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <h4>Read the Charter</h4>
+        <p>Start with the OpenAN Technical Charter to understand governance, scope, and how contributions are accepted.</p>
+        <code>OpenAN Charter.md</code>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <h4>Clone the Repos</h4>
+        <p>The three seed components are live in the project-openan GitHub organization. Clone them, browse the code, and open issues or pull requests.</p>
+        <code>github.com/project-openan/a2a-t-sdk-python<br/>github.com/project-openan/a2a-t-sdk-java<br/>github.com/project-openan/registry-center<br/>github.com/project-openan/orchestration-center</code>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <h4>Join Zulip</h4>
+        <p>Real-time discussion happens on the LF Zulip. Subscribe to the community, support, and TSC channels.</p>
+        <code>#lfn-openan-discussion<br/>#lfn-openan-support<br/>#lfn-openan-tsc</code>
+      </div>
+      <div class="step-card">
+        <div class="step-num">04</div>
+        <h4>Sign the CLA</h4>
+        <p>Contributions are accepted under Apache 2.0. The Contributor License Agreement is managed through EasyCLA and prompted automatically on your first pull request.</p>
+        <code>Apache 2.0 . EasyCLA</code>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GOVERNANCE -->
+<section id="governance">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="kicker section-tag">/ Governance</span>
+        <h2>Technical Steering<br/><em>Committee.</em></h2>
+      </div>
+      <p>The Technical Steering Committee (TSC) oversees design and development activities, sets release and quality standards, mediates technical conflicts, and organizes inter-project collaboration across the OpenAN ecosystem. An Advisory Committee provides input and industry perspective.</p>
+    </div>
+
+    <div class="tsc-grid">
+      <div class="tsc-info">
+        <p><strong style="color: var(--text);">Project Roles.</strong> TSC Chair and Vice-Chair, TSC Voting Members, Advisory Committee members, committers, maintainers, and contributors.</p>
+        <p><strong style="color: var(--text);">How roles are filled.</strong> Defined in <code style="font-family: var(--mono); color: var(--signal); font-size: 0.88rem;">GOVERNING.md</code> and <code style="font-family: var(--mono); color: var(--signal); font-size: 0.88rem;">CONTRIBUTING.md</code>. Removal is by TSC vote.</p>
+        <p><strong style="color: var(--text);">Dispute resolution.</strong> The TSC mediates technical conflicts, with decisions reached by majority vote. The TSC is the body to which the LFN TAC looks for interfaces.</p>
+        <p><strong style="color: var(--text);">Charter evolution.</strong> Governance evolves through changes to the Charter, approved by the TSC.</p>
+
+        <div class="tsc-links">
+          <a href="#" class="btn btn-primary">
+            Read the Charter
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+          <a href="https://github.com/project-openan" class="btn btn-ghost">GOVERNING.md</a>
+        </div>
+      </div>
+
+      <div class="tsc-members-card">
+        <h4>/ TSC Members</h4>
+        <div class="tsc-member">
+          <div class="tsc-member-avatar">YY</div>
+          <div>
+            <div class="tsc-member-name">Yijun Yu</div>
+            <div class="tsc-member-org">Huawei &middot; Chair</div>
+          </div>
+        </div>
+        <div class="tsc-member">
+          <div class="tsc-member-avatar">KZ</div>
+          <div>
+            <div class="tsc-member-name">Kailai Zhang</div>
+            <div class="tsc-member-org">China Mobile</div>
+          </div>
+        </div>
+        <div class="tsc-member">
+          <div class="tsc-member-avatar">BB</div>
+          <div>
+            <div class="tsc-member-name">Bastien Bourgeois</div>
+            <div class="tsc-member-org">Orange</div>
+          </div>
+        </div>
+        <div class="tsc-member">
+          <div class="tsc-member-avatar">BT</div>
+          <div>
+            <div class="tsc-member-name">Boonchoung Tansuthepverawongse</div>
+            <div class="tsc-member-org">AIS</div>
+          </div>
+        </div>
+        <div class="tsc-member">
+          <div class="tsc-member-avatar">EP</div>
+          <div>
+            <div class="tsc-member-name">Eduardo M Panciera Molanes</div>
+            <div class="tsc-member-org">Telecom Argentina</div>
+          </div>
+        </div>
+        <div class="tsc-member">
+          <div class="tsc-member-avatar">UK</div>
+          <div>
+            <div class="tsc-member-name">Ullas Krishnan</div>
+            <div class="tsc-member-org">Infosys</div>
+          </div>
+        </div>
+        <div class="tsc-member">
+          <div class="tsc-member-avatar">XS</div>
+          <div>
+            <div class="tsc-member-name">Xiaobin Shi</div>
+            <div class="tsc-member-org">ZTE</div>
+          </div>
+        </div>
+        <div class="tsc-member">
+          <div class="tsc-member-avatar">ZS</div>
+          <div>
+            <div class="tsc-member-name">Zhiqi Li</div>
+            <div class="tsc-member-org">AsiaInfo</div>
+          </div>
+        </div>
+
+        <h4 style="margin-top: 28px;">/ LF Networking Staff</h4>
+        <div class="tsc-member">
+          <div class="tsc-member-avatar">AJ</div>
+          <div>
+            <div class="tsc-member-name">Arpit Joshipura</div>
+            <div class="tsc-member-org">The Linux Foundation &middot; Executive Director, LF Networking</div>
+          </div>
+        </div>
+        <div class="tsc-member">
+          <div class="tsc-member-avatar">CC</div>
+          <div>
+            <div class="tsc-member-name">Casey Cain</div>
+            <div class="tsc-member-org">The Linux Foundation &middot; Sr. Technical Community Architect</div>
+          </div>
+        </div>
+        <div class="tsc-member">
+          <div class="tsc-member-avatar">JL</div>
+          <div>
+            <div class="tsc-member-name">Jill Lovato</div>
+            <div class="tsc-member-org">The Linux Foundation &middot; Director, Marketing Communications</div>
+          </div>
+        </div>
+        <div class="tsc-member">
+          <div class="tsc-member-avatar">SS</div>
+          <div>
+            <div class="tsc-member-name">Sunny Schatz</div>
+            <div class="tsc-member-org">The Linux Foundation &middot; Marketing Communications Manager</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOIN CTA -->
+<section class="join-cta" id="join">
+  <div class="container">
+    <span class="kicker section-tag">/ Join the Project</span>
+    <h2>The future of telecom is <em>autonomous and open.</em></h2>
+    <p>Subscribe to OpenAN updates, release announcements, community meeting notes, and how-to-contribute posts. Or jump straight to the code and the Zulip channels.</p>
+
+    <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px;">
+      <a href="https://lists.openan.dev" class="btn btn-primary">
+        Subscribe on Groups.io
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+      <a href="https://github.com/project-openan" class="btn btn-ghost">View on GitHub</a>
+    </div>
+    <div class="small"><a href="https://enrollment.lfx.linuxfoundation.org?project=lfn" style="color: var(--text-muted); text-decoration: underline; text-underline-offset: 3px;">Join LF Networking as a member organization &#8594;</a></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="#">
+          <div class="logo-mark">
+            <img src="./src/images/openan-logo.png" alt="OpenAN logo">
+          </div>
+          <div class="logo-text">
+            Open<b style="color: var(--signal); font-weight: 500;">AN</b>
+            <span>An LF Networking Candidate Project</span>
+          </div>
+        </a>
+        <p>An open, vendor-neutral framework for end-to-end closed-loop autonomous networks.</p>
+      </div>
+
+      <div class="footer-col">
+        <h5>Project</h5>
+        <ul>
+          <li><a href="#about">Mission</a></li>
+          <li><a href="#architecture">Architecture</a></li>
+          <li><a href="#components">Components</a></li>
+          <li><a href="#roadmap">Roadmap</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Develop</h5>
+        <ul>
+          <li><a href="https://github.com/project-openan">GitHub</a></li>
+          <li><a href="https://github.com/project-openan/a2a-t-sdk-python">A2A-T SDK</a></li>
+          <li><a href="https://github.com/project-openan/registry-center">Registry Center</a></li>
+          <li><a href="https://github.com/project-openan/orchestration-center">Orchestration Center</a></li>
+          <li><a href="https://github.com/project-openan/docs">Documentation</a></li>
+          <li><a href="#get-involved">Get Involved</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Community</h5>
+        <ul>
+          <li><a href="https://linuxfoundation.zulipchat.com">Zulip</a></li>
+          <li><a href="https://lists.openan.dev">Mailing Lists</a></li>
+          <li><a href="#governance">Governance</a></li>
+          <li><a href="#community">Working Groups</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>About</h5>
+        <ul>
+          <li><a href="https://lfnetworking.org">LF Networking</a></li>
+          <li><a href="https://lfnetworking.org/wp-content/uploads/sites/7/2022/04/LF-Networking-Fund-Charter-updated-2020-04-29.pdf">LFN Charter</a></li>
+          <li><a href="https://www.linuxfoundation.org/legal/trademark-usage">Trademark</a></li>
+          <li><a href="mailto:info@lfnetworking.org">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>&copy; 2026 THE LINUX FOUNDATION . ALL RIGHTS RESERVED . <a href="https://www.linuxfoundation.org/legal/privacy-policy" style="color: var(--text-muted);">PRIVACY</a> . <a href="https://www.linuxfoundation.org/legal/trademark-usage" style="color: var(--text-muted);">TRADEMARK</a></div>
+      <div class="footer-social">
+        <a href="https://github.com/project-openan" aria-label="GitHub"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.5 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.57 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.55-1.13-4.55-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.7 0 0 .84-.27 2.75 1.05A9.5 9.5 0 0 1 12 7.36c.85.01 1.71.12 2.51.34 1.91-1.32 2.75-1.05 2.75-1.05.55 1.4.2 2.44.1 2.7.64.71 1.03 1.62 1.03 2.74 0 3.93-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.81 0 .27.18.59.69.49C19.14 20.61 22 16.78 22 12.25 22 6.59 17.52 2 12 2z"/></svg></a>
+        <a href="https://www.linkedin.com/company/lf-networking" aria-label="LinkedIn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM8.34 17V10H6v7zM7.17 8.92a1.36 1.36 0 1 0 0-2.71 1.36 1.36 0 0 0 0 2.71zM18 17v-3.83c0-2.27-1.21-3.32-2.83-3.32a2.44 2.44 0 0 0-2.21 1.22V10h-2.34v7h2.34v-3.91c0-1.04.39-1.62 1.21-1.62.84 0 1.45.5 1.45 1.65V17z"/></svg></a>
+        <a href="https://www.youtube.com/@LFNetworking" aria-label="YouTube"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.76-1.77C18.25 5 12 5 12 5s-6.25 0-7.84.43A2.5 2.5 0 0 0 2.4 7.2C2 8.78 2 12 2 12s0 3.22.4 4.8a2.5 2.5 0 0 0 1.76 1.77C5.75 19 12 19 12 19s6.25 0 7.84-.43a2.5 2.5 0 0 0 1.76-1.77C22 15.22 22 12 22 12s0-3.22-.4-4.8zM10 15V9l5.2 3-5.2 3z"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
