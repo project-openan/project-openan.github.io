@@ -4,8 +4,9 @@ This file lists the maintainers of this repository. Maintainers have write acces
 
 | Organization | Name | GitHub Handle |
 | ------------ | ---- | ------------- |
-| Huawei  | Chuanyu Chen | ChuanyuChen |
-| Huawei  | Xunli Yang | XunliYang |
+| Huawei | Chuanyu Chen | @ChuanyuChen |
+| Huawei | Xunli Yang | @XunliYang |
+| The Linux Foundation | Casey Cain | @wrathwolf |
 
 ## Emeritus Maintainers
 
