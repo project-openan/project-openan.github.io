@@ -1,0 +1,13 @@
+# Code owners for this repository.
+# Each line is a file pattern followed by one or more owners.
+# The last matching pattern takes precedence.
+# Reference: https://docs.github.com/articles/about-code-owners
+
+# Default owners for all content in this repository.
+# The maintainer team is automatically requested for review on every pull request.
+* @project-openan/website-maintainers
+
+# The governance files themselves are owned by the org admins
+# so that team membership and these files stay in sync.
+/CODEOWNERS @project-openan/admins
+/MAINTAINERS.md @project-openan/admins
