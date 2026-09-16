@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- TODO(1/5): page title — plain text, no markup. Format: "News — <headline> | OpenAN" -->
+<title>News — HEADLINE | OpenAN</title>
+<!-- TODO(2/5): one-sentence meta description for search engines -->
+<meta name="description" content="One-sentence summary of this announcement.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="../src/images/openan-logo.png">
+<link rel="stylesheet" href="../components/navbar.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!-- NAVBAR COMPONENT — injected from components/navbar.html by components/navbar.js -->
+<div id="navbar" data-active="news">
+  <noscript>
+    <div class="container" style="display:flex; align-items:center; gap:18px; flex-wrap:wrap; padding-top:14px; padding-bottom:14px; font-size:0.9rem;">
+      <a href="../index.html" style="font-weight:600;">OpenAN</a>
+      <a href="../index.html#about">About</a>
+      <a href="../best-practices.html">Best Practices</a>
+      <a href="../architecture.html">Architecture</a>
+      <a href="../index.html#roadmap">Roadmap</a>
+      <a href="../index.html#community">Community</a>
+      <a href="../governance.html">Governance</a>
+      <a href="../news.html">News</a>
+    </div>
+  </noscript>
+</div>
+
+<div class="page">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="../index.html">Home</a>
+    <span class="breadcrumb-sep" aria-hidden="true">/</span>
+    <a href="../news.html">News</a>
+    <span class="breadcrumb-sep" aria-hidden="true">/</span>
+    <!-- TODO(3/5): current page title, plain text (must match the h1 below) -->
+    <span class="breadcrumb-current" aria-current="page">HEADLINE</span>
+  </nav>
+
+  <div class="page-head">
+    <!-- Headline. Optional: wrap a key phrase in <em> for the gradient emphasis,
+         e.g. "OpenAN A2A-T SDK <em>1.1.0 Released</em>" -->
+    <h1>HEADLINE <em>emphasis</em></h1>
+    <!-- Meta line: fixed prefix "News", then date (Month DD, YYYY) and author -->
+    <p class="subtitle">News &middot; September 14, 2026 &middot; by OpenAN</p>
+    <!-- Optional pills: category + tags. category-pill classes: release /
+         announcement / event / community (plain "News" if none apply).
+         Delete this block if the item has no category or tags. -->
+    <div class="news-pills">
+      <span class="category-pill">News</span>
+      <span class="news-tag">Tag One</span>
+      <span class="news-tag">Tag Two</span>
+    </div>
+  </div>
+
+  <!-- TODO(4/5): body content — free-form HTML inside .section cards.
+       Available building blocks (see news/styles.css):
+         .section            card with ▸-prefixed h2 heading
+         .highlight          accent callout block
+         .metric-grid/.metric  label/value stat cards
+         .arch-image         full-width rounded image
+       Images may be placed anywhere: put custom images in news/images/
+       and reference as <img class="arch-image" src="images/FILE.png" alt="...">
+       Page-specific styles go in a <style> block in <head> (see
+       best-practices/usecase.html for a precedent). -->
+  <div class="section">
+    <h2>Section Heading</h2>
+    <p>First paragraph of the announcement.</p>
+    <p>Second paragraph. External links: <a href="https://github.com/project-openan" target="_blank" rel="noopener">GitHub</a>.</p>
+  </div>
+
+  <div class="section">
+    <h2>Another Section (optional)</h2>
+    <ul>
+      <li>Bullet point one</li>
+      <li>Bullet point two</li>
+    </ul>
+  </div>
+
+  <!-- TODO(5/5): after saving this page, insert the card at the TOP of the
+       list in ../news.html (copy an existing <a class="news-card"> block).
+       Card image defaults to ../src/images/default-news-profile.svg from the
+       list page; to use a custom cover, reference it in the card img src. -->
+</div>
+
+<script src="../components/navbar.js"></script>
+</body>
+</html>

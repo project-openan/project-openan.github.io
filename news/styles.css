@@ -1,0 +1,269 @@
+/* ============================================================
+   News detail pages shared styles.
+   Copied from best-practices/styles.css (ADR-014) — intentionally
+   a copy, not a cross-module reference, so news/ and best-practices/
+   can diverge. Adds news-specific bits: meta pills, section links,
+   lists and inline code for release notes.
+
+   Depends on CSS variables (--void/--surface/--border/--signal/
+   --text* etc.) defined here in :root, and on the shared
+   .container/.logo/.btn* system provided by components/navbar.css.
+   ============================================================ */
+:root {
+  --void: #06080f;
+  --bg: #0c1020;
+  --surface: #121830;
+  --surface-2: #1a2142;
+  --border: rgba(255,255,255,0.07);
+  --border-strong: rgba(255,255,255,0.14);
+  --text: #eef3fb;
+  --text-muted: #8c97b3;
+  --text-dim: #5a648a;
+  --signal: #1aa8e2;
+  --signal-2: #4fc3f7;
+  --accent: #00bcd4;
+  --display: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --sans: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--void);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(26,168,226,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,168,226,0.04) 1px, transparent 1px);
+  background-size: 64px 64px;
+  pointer-events: none;
+  z-index: 0;
+  mask-image: radial-gradient(ellipse at top, black 30%, transparent 75%);
+}
+body::after {
+  content: "";
+  position: fixed; top: -20%; left: 50%;
+  width: 1200px; height: 800px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(26,168,226,0.10), transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+a { color: inherit; text-decoration: none; }
+img, svg { display: block; max-width: 100%; }
+
+/* ---------- PAGE LAYOUT ---------- */
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 80px 32px 120px;
+}
+
+.page-head {
+  margin-bottom: 56px;
+}
+.kicker {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--signal);
+  margin-bottom: 16px;
+}
+.page-head h1 {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  letter-spacing: -0.025em;
+  line-height: 1.12;
+  margin-bottom: 14px;
+}
+.page-head h1 em {
+  font-style: normal;
+  font-weight: 500;
+  background: linear-gradient(120deg, var(--signal), var(--signal-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.page-head .subtitle {
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* ---------- NEWS META PILLS (category + tags) ---------- */
+.news-pills {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+.category-pill {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--signal);
+  background: rgba(26,168,226,0.1);
+  border: 1px solid rgba(26,168,226,0.25);
+  padding: 3px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.category-pill.release     { color: #4fc3f7; border-color: rgba(79,195,247,0.25); background: rgba(79,195,247,0.08); }
+.category-pill.announcement { color: #a78bfa; border-color: rgba(167,139,250,0.25); background: rgba(167,139,250,0.08); }
+.category-pill.event        { color: #34d399; border-color: rgba(52,211,153,0.25); background: rgba(52,211,153,0.08); }
+.category-pill.community    { color: #fbbf24; border-color: rgba(251,191,36,0.25); background: rgba(251,191,36,0.08); }
+.news-tag {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  letter-spacing: 0.03em;
+}
+
+/* ---------- SECTION CARDS ---------- */
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 32px 36px;
+  margin-bottom: 20px;
+}
+.section h2 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.15rem;
+  color: var(--text);
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+.section h2::before {
+  content: "▸ ";
+  color: var(--signal);
+}
+.section p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  margin-bottom: 14px;
+}
+.section p:last-child { margin-bottom: 0; }
+.section ul, .section ol {
+  margin: 0 0 14px 24px;
+  color: var(--text-muted);
+}
+.section li {
+  margin-bottom: 8px;
+  line-height: 1.65;
+  font-size: 0.95rem;
+}
+.section ul li::marker { color: var(--signal); }
+.section ol li::marker { color: var(--signal); font-family: var(--mono); }
+.section a {
+  color: var(--signal-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(79,195,247,0.3);
+  transition: all 0.2s;
+}
+.section a:hover {
+  color: var(--signal-2);
+  text-decoration-color: var(--signal-2);
+}
+.section code {
+  font-family: var(--mono);
+  font-size: 0.9em;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  padding: 2px 7px;
+  border-radius: 6px;
+  color: var(--signal-2);
+}
+
+/* ---------- ARCHITECTURE IMAGE ---------- */
+.arch-image {
+  width: 100%;
+  border-radius: 10px;
+  margin-top: 8px;
+}
+
+/* ---------- METRICS ---------- */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+.metric {
+  background: rgba(26,168,226,0.06);
+  border: 1px solid rgba(26,168,226,0.12);
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+.metric .label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: #fff;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.metric .value {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--signal);
+  letter-spacing: -0.02em;
+}
+
+/* ---------- HIGHLIGHT ---------- */
+.highlight {
+  background: rgba(26,168,226,0.08);
+  border: 1px solid rgba(26,168,226,0.15);
+  border-radius: 10px;
+  padding: 16px 20px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-top: 14px;
+}
+
+/* ---------- FOOTER NOTE ---------- */
+.footer-note {
+  padding: 28px 0 0;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 768px) {
+  .page { padding: 48px 20px 80px; }
+  .section { padding: 24px 24px; }
+  .metric-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .metric-grid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
+}
