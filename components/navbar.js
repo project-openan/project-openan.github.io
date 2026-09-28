@@ -13,8 +13,7 @@
    docs/adr/ADR-013-detail-pages-navbar-and-breadcrumb.md):
    1. fetch the template and inject it into the placeholder;
    2. based on the placeholder's data-active, add .active to
-      .nav a[data-nav=...] (when the value is 'index' i.e. the home
-      page, no link is marked);
+      .nav a[data-nav=...] (the home page marks the Home link);
    3. on non-home pages, prefix relative URLs with the path back to the
       site root — '' for root pages, '../' for one subdirectory, etc. —
       so the logo image, logo href, in-page anchors (`#...` -> `index.html#...`)
@@ -57,7 +56,7 @@
 
       // 1. Active state: mark the current page link based on the placeholder's data-active
       var active = host.getAttribute('data-active');
-      if (active && active !== 'index') {
+      if (active) {
         var current = host.querySelector('.nav a[data-nav="' + active + '"]');
         if (current) current.classList.add('active');
       }

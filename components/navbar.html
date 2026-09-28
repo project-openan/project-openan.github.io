@@ -4,12 +4,14 @@
   Injected into the <div id="navbar"> placeholder via fetch in
   components/navbar.js.
   Conventions:
-  - In-page anchors are written in same-page form (#about etc.); the
-    cross-page prefix needed by sub-pages is automatically rewritten
-    to index.html#about by navbar.js at injection time.
+  - Nav links are static page links, one tab per page (ADR-015); the
+    cross-page prefix needed by sub-pages is added by navbar.js at
+    injection time. In-page anchors survive only in the header-actions
+    CTAs (#community / #get-involved), rewritten to index.html#... on
+    sub-pages by navbar.js.
   - Each nav link carries a data-nav marker; navbar.js uses the
     data-active attribute on the placeholder to add .active to the
-    link matching the current page.
+    link matching the current page (Home is marked on the home page).
   - Styles come from components/navbar.css; inline navbar styles are
     forbidden in pages.
   ============================================================ -->
@@ -39,11 +41,9 @@
     </a>
 
     <nav class="nav">
-      <a href="#about" data-nav="index">About</a>
+      <a href="index.html" data-nav="index">Home</a>
       <a href="architecture.html" data-nav="architecture">Architecture</a>
       <a href="best-practices.html" data-nav="best-practices">Best Practices</a>
-      <a href="#roadmap" data-nav="roadmap">Roadmap</a>
-      <a href="#community" data-nav="community">Community</a>
       <a href="governance.html" data-nav="governance">Governance</a>
       <a href="news.html" data-nav="news">News</a>
     </nav>
