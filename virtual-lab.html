@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Virtual Lab - OpenAN</title>
-<meta name="description" content="Experience OpenAN hands-on in the Virtual Lab: browser-based demos of A2A-T multi-agent collaboration and the telecom operator ontology, built on real operator practice.">
+<title>Portal - OpenAN</title>
+<meta name="description" content="Experience OpenAN hands-on in the OpenAN Portal: browser-based demos of A2A-T multi-agent collaboration and the telecom operator ontology, plus an interactive Playground for building and debugging with the framework's protocols.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -138,6 +138,29 @@
     max-width: 560px;
   }
   .lab-demos-head .btn { margin-top: 24px; }
+
+  .lab-demos + .lab-demos { margin-top: 104px; }
+  .lab-points {
+    list-style: none;
+    margin-top: 24px;
+    display: grid;
+    gap: 12px;
+    max-width: 640px;
+  }
+  .lab-points li {
+    position: relative;
+    padding-left: 18px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .lab-points li::before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    color: var(--signal);
+  }
+  .lab-points strong { color: var(--text); font-weight: 500; }
 
   .lab-grid {
     display: grid;
@@ -309,16 +332,16 @@
   </noscript>
 </div>
 
-<!-- VIRTUAL LAB LINKS: hero entry + Demo Center entry + both demo cards point to the online environment. -->
+<!-- OPENAN PORTAL LINKS: hero entry + Showroom demos + Playground console all point to the online environment. -->
 <div class="page">
   <div class="lab-hero">
     <div class="lab-hero-copy">
-      <span class="kicker">/ Virtual Lab</span>
+      <span class="kicker">/ OpenAN Portal</span>
       <h1>Experience OpenAN <em>hands-on.</em></h1>
-      <p>The Virtual Lab is OpenAN's experience environment: a browser-based playground for trying the framework's core capabilities on scenarios drawn from real operator practice. Watch A2A-T multi-agent collaboration resolve network faults and customer complaints end to end, explore the telecom operator ontology, and replay every step of the autonomous closed loop — no production network, no complex setup, nothing to install.</p>
+      <p>The OpenAN Portal is the project's experience environment — a browser-based entry point for trying the framework's core capabilities on scenarios drawn from real operator practice, with nothing to install. Browse curated demos in the Showroom, or open the Playground to work directly with the protocols, agents and ontology.</p>
       <div class="lab-hero-cta">
         <a href="http://47.236.98.226:9003" class="btn btn-primary" target="_blank" rel="noopener">
-          Enter the Virtual Lab
+          Enter the Portal
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </a>
       </div>
@@ -373,6 +396,25 @@
         <p class="lab-desc">When a major-event live-stream degrades and viewers report buffering, the assurance agent parses intent and orchestrates wireless and live-stream stub agents via A2A-T for cell assurance and stream-quality diagnosis.</p>
       </div>
     </a>
+    </div>
+  </div>
+
+  <div class="lab-demos">
+    <div class="lab-demos-head">
+      <span class="kicker">/ Playground</span>
+      <h2>Don't just watch — <em>build and debug.</em></h2>
+      <p>The Playground is OpenAN's interactive developer console: a browser-based sandbox for working directly with the framework's building blocks instead of watching a guided demo. It includes all components of OpenAN  introduced as following.</p>
+      <ul class="lab-points">
+        <li><strong>A2A-T Console</strong> — compose and send Task-T, Negotiation-T, Notification-T and Authorization-T messages from built-in templates, and inspect every raw request and response.</li>
+        <li><strong>Registry Center</strong> — register, update and browse agent cards, and see how agents advertise capabilities and discover each other.</li>
+        <li><strong>Orchestration &amp; Execution</strong> — trace how intents are decomposed, and workflows are composed and executed across collaborating agents.</li>
+        <li><strong>Ontology &amp; Datasets</strong> — explore the telecom operator ontology and replay curated request/response pairs from real scenarios.</li>
+        <li><strong>Mock Agents</strong> — spin up mock agents to test your integrations without a live network.</li>
+      </ul>
+      <a href="http://47.236.98.226:9002/openan-playground" class="btn btn-primary" target="_blank" rel="noopener">
+        Enter the Playground
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
     </div>
   </div>
 </div>
