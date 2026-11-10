@@ -109,8 +109,9 @@
 
   .practice-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    max-width: 440px;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    max-width: 900px;
+    margin: 0 auto;
     gap: 20px;
   }
   .practice-card {
@@ -279,6 +280,18 @@
         <span class="practice-subject">Multi-Agent Example Case</span>
         <div class="practice-divider"></div>
         <p class="practice-desc">OpenAN orchestrates specialized agents end-to-end — bridging call centers, billing, CDN, and NOC for autonomous complaint resolution</p>
+      </div>
+    </a>
+
+    <a href="best-practices/henan-mobile-openan-usecase.html" class="practice-card">
+      <div class="practice-image">
+        <img src="best-practices/images/openan_workflow_infographic.png" alt="Henan Mobile OpenAN Use Case">
+      </div>
+      <div class="practice-body">
+        <h3 class="practice-title">Henan Mobile: From Operations Automation to E2E Collaborative Autonomy</h3>
+        <span class="practice-subject">Multi-Agent Use Case &middot; Joint Innovation</span>
+        <div class="practice-divider"></div>
+        <p class="practice-desc">Cross-domain collaborative complaint handling and intent-driven dynamic energy saving — built on OpenAN and the A2A-T protocol, validated with live-network production practice</p>
       </div>
     </a>
 
