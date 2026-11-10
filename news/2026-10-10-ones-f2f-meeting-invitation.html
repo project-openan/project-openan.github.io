@@ -48,6 +48,28 @@
     box-shadow: 0 24px 60px -30px rgba(52,211,153,0.45);
   }
 
+  /* Official invitation letter: full column width like the banner,
+     scales down on narrow screens */
+  .event-letter {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 14px;
+    border: 1px solid rgba(52,211,153,0.25);
+    box-shadow: 0 24px 60px -30px rgba(52,211,153,0.45);
+  }
+  .event-letter-caption {
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 8px 0 18px;
+  }
+
   /* Event facts: date / location / hosts cards */
   .event-info-grid {
     display: grid;
@@ -161,6 +183,11 @@
   <!-- Content images live in src/images/news/contents/ (ADR-016) and are shown
        at natural size; the list-card cover lives in src/images/news/covers/. -->
   <img class="event-banner" src="../src/images/news/contents/ONES-Invitation.png" alt="AAC &amp; TSC Joint F2F Meeting at ONE Summit 2026 in Tokyo">
+
+  <figure>
+    <img class="event-letter" src="../src/images/news/contents/ONES-Invitation-Letter.jpg" alt="Official OpenAN Summit invitation letter, December 11, 2026, Tokyo, Japan">
+    <figcaption class="event-letter-caption">Official Invitation Letter from LFN &amp; OpenAN</figcaption>
+  </figure>
 
   <div class="section">
     <h2>Intro</h2>
