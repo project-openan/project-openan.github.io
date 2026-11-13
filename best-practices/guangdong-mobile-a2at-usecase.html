@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>China Mobile Guangdong: A2A-T Cross-City SPN Dedicated-Line Complaint Handling | OpenAN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="../src/images/openan-logo.png">
+<link rel="stylesheet" href="../components/navbar.css">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* Phase tag */
+  .phase-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--signal);
+    border: 1px solid rgba(26,168,226,0.35);
+    border-radius: 999px;
+    padding: 4px 12px;
+    margin-bottom: 12px;
+  }
+  .phase-tag.plan { color: #a78bfa; border-color: rgba(167,139,250,0.4); }
+
+  /* Figure */
+  .figure { margin-top: 16px; }
+  .figure img {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    display: block;
+  }
+  .figure figcaption {
+    margin-top: 10px;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+  }
+
+  /* Outcome box */
+  .outcome {
+    background: rgba(26,168,226,0.06);
+    border: 1px solid rgba(26,168,226,0.15);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-top: 14px;
+  }
+  .outcome strong { color: var(--text); }
+  .outcome ul {
+    list-style-type: disc;
+    padding-left: 1.25rem;
+    margin-top: 8px;
+  }
+  .outcome ul li {
+    margin-bottom: 6px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+  .outcome .blue { color: var(--signal); font-weight: 600; }
+
+  /* Metric grid */
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+  }
+  .metric {
+    background: rgba(26,168,226,0.06);
+    border: 1px solid rgba(26,168,226,0.12);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+  .metric .label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    color: #fff;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .metric .value {
+    font-family: var(--display);
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--signal);
+    letter-spacing: -0.02em;
+  }
+</style>
+</head>
+<body>
+<!-- NAVBAR COMPONENT — injected from components/navbar.html by components/navbar.js -->
+<div id="navbar" data-active="best-practices">
+  <noscript>
+    <div class="container" style="display:flex; align-items:center; gap:18px; flex-wrap:wrap; padding-top:14px; padding-bottom:14px; font-size:0.9rem;">
+      <a href="../index.html" style="font-weight:600;">OpenAN</a>
+      <a href="../index.html#about">About</a>
+      <a href="../best-practices.html">Best Practices</a>
+      <a href="../architecture.html">Architecture</a>
+      <a href="../index.html#roadmap">Roadmap</a>
+      <a href="../index.html#community">Community</a>
+      <a href="../governance.html">Governance</a>
+      <a href="../news.html">News</a>
+    </div>
+  </noscript>
+</div>
+
+<div class="page">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="../index.html">Home</a>
+    <span class="breadcrumb-sep" aria-hidden="true">/</span>
+    <a href="../best-practices.html">Best Practices</a>
+    <span class="breadcrumb-sep" aria-hidden="true">/</span>
+    <span class="breadcrumb-current" aria-current="page">China Mobile Guangdong A2A-T Use Case</span>
+  </nav>
+
+  <div class="page-head">
+    <span class="kicker">Best Practice · Joint Innovation</span>
+    <h1>China Mobile Guangdong: <em>A2A-T</em> Cross-City SPN Dedicated-Line Complaint Handling</h1>
+    <p class="subtitle">Phase 1 validated the A2A-T protocol with live-network dedicated-line diagnosis &middot; Phase 2 will connect the full end-to-end complaint process</p>
+  </div>
+
+  <div class="section">
+    <h2>Overview</h2>
+    <p>China Mobile Guangdong and Huawei are jointly innovating on the <strong>A2A-T (Agent-to-Agent for Telecom)</strong> protocol — built on the OpenAN framework — to bring multi-agent collaboration into transmission-network operations. The pilot scenario is the <strong>SPN (Slicing Packet Network) dedicated-line complaint</strong>: when an enterprise customer's dedicated line degrades or fails, the complaint flows through the 10086 call center and the EMOS process center to the transmission workbench, and multiple agents must collaborate to locate and restore the fault.</p>
+    <p>The joint innovation runs in two phases: <strong>Phase 1</strong> connects the single-city complaint diagnosis scenario and validates the A2A-T protocol's basic capabilities; <strong>Phase 2</strong> connects the full cross-city complaint process — service restoration, fault location, automatic repair and automatic closure — and validates the protocol's advanced capabilities, including Negotiation-T, Authorization-T and Notification-T.</p>
+    <p>The Phase 1 results were co-released by China Mobile Guangdong and Huawei at <strong>DTW (Digital Transformation World)</strong>.</p>
+  </div>
+
+  <div class="section">
+    <span class="phase-tag">Phase 1 · Results</span>
+    <h2>Phase 1 Results — Two-Layer Agent Collaboration, Flows Connected</h2>
+    <p>Phase 1 ran from April to June: scenario selection, solution alignment, patch release, and joint debugging with the transmission workbench — completed with a co-release at DTW. The goal was to connect the SPN dedicated-line complaint scenario over A2A-T, validate the protocol's basic capabilities (registration, orchestration and basic business flows), and complete single-city scenario validation.</p>
+    <figure class="figure">
+      <img src="images/gd_a2at_phase1_flow.png" alt="Over A2A-T test point for the SPN customer-side test scenario — business layer and network layer architecture">
+      <figcaption>Phase 1 pilot architecture — over A2A-T test point for the SPN customer-side test scenario: the complaint flows from the operator user through the 10086 call center to WAIMO network orchestration and the service orchestration platform, which execute tasks over A2A-T with the SPN network access capabilities (based on OMC) across Region A, the gateway and Region B</figcaption>
+    </figure>
+    <figure class="figure">
+      <img src="images/gd_a2at_phase1_summary.png" alt="China Mobile Guangdong A2A-T Phase 1 results summary — milestones, approaches, progress and phase goals">
+      <figcaption>Phase 1 results summary — milestones, flow connectivity approaches, current progress and phase goals (translated from the original Chinese slides)</figcaption>
+    </figure>
+    <div class="outcome">
+      <strong>What Phase 1 Delivered</strong>
+      <ul>
+        <li><strong>Environment deployment</strong> — the Registry Center, Transmission Workbench and Orchestration Center were developed and deployed, and the West Guangdong NCE SPN agent was upgraded.</li>
+        <li><strong>Flow connectivity</strong> — through openAN and A2A-T, multi-agent collaboration was achieved with segmented connectivity from WAIMO to the Transmission Workbench agent, from the Workbench agent to the Registry Center, and from the Workbench to the West Guangdong NCE SPN agent.</li>
+        <li><strong>Two integration approaches validated</strong> — direct invocation of the West Guangdong NCE SPN A2A-T interface by the workbench, and orchestration-center-driven invocation.</li>
+        <li><strong>Ecosystem milestone</strong> — the case was released at DTW (Digital Transformation World).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>A Live-Network First: E2E Automatic Diagnosis of a Real SPN Dedicated Line</h2>
+    <p>The headline business result of Phase 1: end-to-end automatic diagnosis was completed for a live SPN dedicated line running between the <strong>Guangzhou Panyu Nansha Airport Building</strong> and the <strong>Guangzhou Zengcheng Zhongxin Water Plant</strong> (GEO143BS LTE). The A2A-T agent collaboration identified the root causes — abnormal transmit power at the far end caused by an optical module fault, mismatched optical module types on the two sides, and an incorrect attenuation setting — while confirming local transmit power was normal. <strong>The diagnosis conclusion was confirmed correct by human experts.</strong></p>
+  </div>
+
+  <div class="section">
+    <span class="phase-tag plan">Phase 2 · Planning</span>
+    <h2>Phase 2 Planning — Three-Layer Agent Collaboration, Full Complaint Process</h2>
+    <p>Phase 2 targets the full cross-city SPN dedicated-line complaint process — service restoration, fault diagnosis, automatic repair and automatic closure — with joint debugging between WAIMO and the transmission workbench, leading to a joint release and results summary in October. The focus is on validating the A2A-T protocol's advantages in the end-to-end complaint flow: integration advantages, plus <strong>Negotiation-T</strong>, <strong>Authorization-T</strong> and <strong>Notification-T</strong>.</p>
+    <figure class="figure">
+      <img src="images/gd_a2at_phase2_solution_design.png" alt="A2A-T Phase 2 overall solution design — fault diagnosis flow and service restoration flow across WAIMO, EMOS process center, transmission workbench and OMC system">
+      <figcaption>Phase 2 overall solution design — complaint, diagnosis, authorization and service-recovery notification flows across three collaborating agents</figcaption>
+    </figure>
+    <div class="outcome">
+      <strong>Key Flows in the Phase 2 Design</strong>
+      <ul>
+        <li><strong>Fault diagnosis flow</strong> — the WAIMO fault center grabs tickets from the process center and dispatches them to the transmission workbench and the OMC system; the process involves coordination among three agents, and the diagnosis results are written back to the process center.</li>
+        <li><strong>Service restoration flow</strong> — if the OMC system supports restoration, the workbench performs authorization; after restoration completes, the OMC notifies the workbench, the workbench verifies that service performance indicators have recovered, and reports the service-recovery notification to the WAIMO fault center.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Phase 2 Deployment Architecture</h2>
+    <p>The deployment brings together agents from multiple vendors over the A2A-T SDK: the <strong>WAIMO fault center agent (Yiyang)</strong> and the <strong>transmission workbench agent (Kaitong)</strong> each embed the workflow execution engine SDK with the A2A-T SDK, and collaborate downward with two <strong>SPN domain agents (Huawei)</strong>. All agents register with the Registry Center, while the orchestration center composes and retrieves workflows — for example: generate a complaint diagnosis message, diagnose the complaint content in parallel with two SPN domain agents, and summarize the diagnosis results.</p>
+    <figure class="figure">
+      <img src="images/gd_a2at_phase2_arch_op_mode.png" alt="A2A-T Phase 2 deployment architecture in OP mode — WAIMO fault center, transmission workbench agent, SPN domain agents, registry center and orchestration center workflow">
+      <figcaption>Phase 2 deployment architecture (OP mode) — vendor agents collaborating over A2A-T with centralized registration and workflow orchestration</figcaption>
+    </figure>
+    <figure class="figure">
+      <img src="images/gd_a2at_phase2_arch_full.png" alt="A2A-T Phase 2 deployment architecture — registry center with OpenAN agent registration and query, orchestration engine and workflow storage">
+      <figcaption>Phase 2 deployment architecture — the Registry Center provides security capabilities and OpenAN-based agent registration &amp; query, while the Orchestration Center provides engine, storage and retrieval interfaces</figcaption>
+    </figure>
+  </div>
+
+  <div class="section">
+    <h2>Expected Benefits</h2>
+    <p>Ticket analysis across the province (March–May) shows Guangzhou handles about <strong>38 SPN complaint tickets per month</strong> with an average handling time of <strong>2.2 hours</strong>; roughly <strong>90% of root causes are customer-side issues</strong>, with most of the rest being network-side line problems — a pattern well suited to agent-automated diagnosis and restoration.</p>
+    <div class="metric-grid">
+      <div class="metric">
+        <div class="label">Complaint Timeliness Rate</div>
+        <div class="value">&gt; 90%</div>
+      </div>
+      <div class="metric">
+        <div class="label">E2E Handling Time</div>
+        <div class="value">Days → Hours</div>
+      </div>
+      <div class="metric">
+        <div class="label">Diagnosis Time</div>
+        <div class="value">Hours → Minutes</div>
+      </div>
+      <div class="metric">
+        <div class="label">New-Feature Integration</div>
+        <div class="value">Months → Days</div>
+      </div>
+      <div class="metric">
+        <div class="label">Interaction Efficiency</div>
+        <div class="value">+40%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Looking Ahead</h2>
+    <p>From validating basic protocol capabilities on a single-city scenario, to connecting the full cross-city complaint process with negotiation, authorization and notification, China Mobile Guangdong and Huawei are advancing the A2A-T protocol — and the OpenAN framework beneath it — from technology validation toward production-grade, multi-vendor autonomous collaboration. The Phase 2 joint release is planned for October.</p>
+  </div>
+
+  <p class="footer-note">OpenAN · Open Autonomous Networks — China Mobile Guangdong A2A-T Use Case</p>
+</div>
+<script src="../components/navbar.js"></script>
+</body>
+</html>
