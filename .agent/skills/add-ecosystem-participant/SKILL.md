@@ -75,7 +75,7 @@ src/images/participants-logo/<organization_slug>.<ext>
 
 ### 4. 仅在用户同意后发布加入新闻
 
-用户同意发布新闻时，**必须调用 `openan-member-join-news` 技能生成新闻，其路径为 `.agents/skills/openan-member-join-news`**。不要在本技能中重新实现或另写一套新闻生成规则。
+用户同意发布新闻时，**必须调用 `openan-member-join-news` 技能生成新闻，其路径为 `.agent/skills/openan-member-join-news`**。不要在本技能中重新实现或另写一套新闻生成规则。
 
 向该技能提供 Issue 评论永久链接、已确认的组织官方名称、官网、最终 Logo 文件和发布日期；用户未指定日期时使用当前日期。同时将评论中的 `Country`、`Description of Use or Contribution` 作为公开事实来源传入，但保留其中的计划或意向语气。新闻详情页、封面、`news.html` 卡片同步、写作规范和本地预览均遵循 `openan-member-join-news` 的要求。
 
